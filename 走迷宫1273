@@ -1,0 +1,65 @@
+https://xujcoj.com/home/problem/detail/1273
+
+#include<iostream>
+#include<queue>
+using namespace std;
+int m, n;
+int bx, by, ex, ey;//bx,by,ex,ey表示起点终点坐标 
+int mp[102][102];
+bool vis[102][102][2];
+const int dx[4] = { 0,1,0,-1 };
+const int dy[4] = { 1,0,-1,0 };
+struct node
+{
+	int x, y, step, k;//k=0表示没使用火箭 
+};
+queue<node> q;
+int bfs(int a, int b)
+{
+	q.push({ a, b, 0, 0 });
+	vis[a][b][0] = 1;
+	while (!q.empty())
+	{
+		node s = q.front(); q.pop();
+		if (s.x == ex && s.y == ey) return s.step;
+		for (int i = 0; i < 4; i++)
+		{
+			int nx = s.x + dx[i], ny = s.y + dy[i];
+			if (nx >= 1 && nx <= m && ny >= 1 && ny <= n)
+			{
+				if (mp[nx][ny] != -1 && !vis[nx][ny][s.k])
+				{
+					vis[nx][ny][s.k] = 1;
+					q.push({ nx, ny, s.step + 1, s.k });
+				}
+				if (mp[nx][ny] == -1 && s.k == 0 && !vis[nx][ny][1])//遇到墙使用火箭 
+				{
+					vis[nx][ny][1] = 1;
+					nx = s.x + 2*dx[i], ny = s.y + 2*dy[i];
+					if (nx >= 1 && nx <= m && ny >= 1 && ny <= n) q.push({ nx, ny, s.step + 1, 1 });
+				}
+			}
+		}
+	}
+	return -1;
+}
+int main()
+{
+	bool f =1; 
+	cin >> m >> n;
+	for (int i = 1; i <= m; i++)//寻找起点终点坐标 
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			cin >> mp[i][j];
+			if (mp[i][j] == 0 && f)
+			{
+				f = 0;
+				bx = i, by = j;
+			}
+			else if (mp[i][j] == 0 && !f) ex = i, ey = j;
+		}
+	}
+	cout << bfs(bx, by);
+	return 0;
+}
