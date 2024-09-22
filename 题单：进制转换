@@ -1,0 +1,55 @@
+https://xujcoj.com/home/contest/766/problem/4
+
+
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+ll zs(int a,int c,string b,string d)//转为十进制 
+{
+	ll x=0;
+	ll pow=1;
+	for(int i=b.size()-1;i>=0;i--)
+	{
+		if(b[i]>='0'&&b[i]<='9') x=x+(b[i]-'0')*pow;
+		else x=x+(b[i]-'A'+10)*pow;
+		pow*=a;
+	}
+	pow=1;
+	for(int i=d.size()-1;i>=0;i--)
+	{
+		if(d[i]>='0'&&d[i]<='9') x=x+(d[i]-'0')*pow;
+		else x=x+(d[i]-'A'+10)*pow;
+		pow*=c;
+	}
+	return x;
+}
+
+string ze(ll x, int e) //转为e进制 
+{
+    string ans;
+    if (x == 0) return "0";
+    while (x > 0) 
+	{
+        int d = x % e;
+        char ch;
+        if (d < 10) ch = d + '0';        
+		else ch = d - 10 + 'A';
+        ans.push_back(ch);
+        x /= e;
+    }
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		int a,c,e;
+		string b,d;
+		cin>>a>>b>>c>>d>>e;	
+		ll x=zs(a,c,b,d);
+		cout<<ze(x,e)<<endl;
+	}	
+}
