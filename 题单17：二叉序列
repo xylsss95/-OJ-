@@ -1,0 +1,100 @@
+https://xujcoj.com/home/contest/1676/problem/2
+
+*****注：这里的代码来着CSDN，如果有代码搞不懂原理手推一遍就好
+https://blog.csdn.net/qq_52177557/article/details/115413830?ops_request_misc=&request_id=&biz_id=102&utm_term=%E6%80%8E%E4%B9%88%E9%80%9A%E8%BF%87%E6%A0%91%E7%9A%84%E5%89%8D%E5%BA%8F%E5%92%8C%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E6%B1%82%E5%87%BA%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-115413830.142^v100^pc_search_result_base4&spm=1018.2226.3001.4187
+
+//已知前序和中序求后序
+#include<bits/stdc++.h>
+using namespace std;
+int n,px[300],qx[300],zx[300];  //qx存前序遍历排列、zx存中序遍历
+//px存每个数字对应在前序遍历中的位置 
+int hx[105],cnt;   //hx存后序遍历排列，cnt记录当前存到的位置 
+void ss(int l,int r)
+{
+    if(l==r)   //只剩一个节点
+    {
+        //如果是要存下来，把直接输出改成存对应数组就行
+        hx[++cnt]=zx[l]; 
+        return;
+    }
+    int xh=1e9,minn;   //寻找当前子树的根节点(前序排列中最小的元素地址) 
+    for(int i=l;i<=r;i++)
+    {
+        if(px[zx[i]]<xh)
+        {
+            xh=px[zx[i]];
+            minn=i;
+        }
+    }
+    //后序遍历
+    if(minn-1>=l) ss(l,minn-1);  //搜索根节点的左子树（先判断存在） 
+    if(minn+1<=r) ss(minn+1,r);  //搜索根节点的右子树（先判断存在）
+    hx[++cnt]=zx[minn];  //左右子树找完了，那剩下的根节点也可以加入后序序列中了 
+}
+int main()
+{
+    cin>>n;
+    for(int i=1;i<=n;i++)
+    {
+        cin>>qx[i];
+        px[qx[i]]=i; 
+    }
+    for(int i=1;i<=n;i++)
+        cin>>zx[i];
+    ss(1,n);
+    for(int i=1;i<=n;i++)
+    {
+    	if(i==1) cout<<hx[i];
+    	else cout<<" "<<hx[i];
+	}
+    cout<<endl; 
+    return 0;
+}
+
+
+
+//已后知序和中序求前序
+//方法代码跟上面那个差不多的，就不写注释了吧 
+#include<bits/stdc++.h>
+#define ll long long
+#define endl '\n'
+using namespace std;
+int n,px[105],hx[105],zx[105];
+int qx[105],cnt;
+void ss(int l,int r)
+{
+    if(l==r)
+    {
+        qx[++cnt]=zx[l];
+        return;
+    }
+    int xh=0,wz;
+    for(int i=l;i<=r;i++)
+    {
+        if(px[zx[i]]>xh)
+        {
+            xh=px[zx[i]];
+            wz=i;
+        }
+    }
+    //前序是先根节点，接着左子树右子树的啦 
+    qx[++cnt]=zx[wz];
+    if(wz-1>=l) ss(l,wz-1);
+    if(wz+1<=r) ss(wz+1,r);
+}
+int main()
+{
+    cin>>n;
+    for(int i=1;i<=n;i++)
+        cin>>zx[i];
+    for(int i=1;i<=n;i++)
+    {
+        cin>>hx[i];
+        px[hx[i]]=i;
+    }
+    ss(1,n);
+    for(int i=1;i<=n;i++)
+       cout<<qx[i]<<" "; 
+    return 0;
+}
+
